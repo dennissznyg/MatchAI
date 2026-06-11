@@ -1,3 +1,4 @@
+from urllib.parse import quote_plus
 from adapters.jobindex import JobIndexAdapter
 
 # Minimum score (0-100) for at et job tages med i den daglige email
@@ -16,14 +17,35 @@ STORKOEBENHAVN_NORDSJAELLAND = [
     "storkøbenhavn", "hovedstadsområdet", "hjemmearbejdsplads",
 ]
 
+# Søgeord der hver giver et separat JobIndex-feed.
+SEARCH_TERMS = [
+    "IT/OT",
+    "GxP",
+    "Digital transformation",
+    "Manufacturing Intelligence",
+    "Programme Manager",
+    "Program Manager",
+    "Pharma",
+    "Life Science",
+    "MES",
+    "IIoT",
+    "Industry 4.0",
+    "Solution Architect",
+    "Tech Lead",
+    "Implementation consultant",
+    "Implementation partner",
+    "Digital partner",
+    "Transformation consultant",
+    "Data partner",
+    "Senior Project Manager",
+    "GxP TechLead",
+]
+
 ADAPTERS = [
     JobIndexAdapter(
         feed_urls=[
-            "https://www.jobindex.dk/jobsoegning.rss?q=IT%2FOT+projektleder",
-            "https://www.jobindex.dk/jobsoegning.rss?q=Senior+projektleder+life+science",
-            "https://www.jobindex.dk/jobsoegning.rss?q=Digital+transformation+pharma",
-            "https://www.jobindex.dk/jobsoegning.rss?q=GxP+konsulent",
-            "https://www.jobindex.dk/jobsoegning.rss?q=Program+manager+pharma",
+            f"https://www.jobindex.dk/jobsoegning.rss?q={quote_plus(term)}"
+            for term in SEARCH_TERMS
         ],
         allowed_areas=STORKOEBENHAVN_NORDSJAELLAND,
     ),
