@@ -25,6 +25,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Write profile from secret
+        env:
+          CV_TEXT: ${{ secrets.CV_TEXT }}
+        run: |
+          mkdir -p profile
+          printf '%s' "$CV_TEXT" > profile/cv.md
+
       - name: Run job finder
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

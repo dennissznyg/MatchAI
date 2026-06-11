@@ -1,4 +1,5 @@
 .env
 data/
+profile/
 __pycache__/
 *.pyc
