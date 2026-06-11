@@ -47,7 +47,7 @@ ADAPTERS = [
             f"https://www.jobindex.dk/jobsoegning.rss?q={quote_plus(term)}"
             for term in SEARCH_TERMS
         ],
-        allowed_areas=STORKOEBENHAVN_NORDSJAELLAND,
+        allowed_areas=None,  # hele Danmark
     ),
     # Eksempel på fremtidig adapter:
     # WorkdayAdapter(company_url="https://novonordisk.wd3.myworkdayjobs.com/..."),
