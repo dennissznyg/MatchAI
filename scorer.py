@@ -13,8 +13,22 @@ Vær kritisk og realistisk - giv kun høje scores (80+) til jobs der reelt match
 erfaringsniveau, kompetencer og præferencer. Svar KUN med gyldig JSON, intet andet."""
 
 
+BATCH_SIZE = 15
+
+
 def score_jobs(client: anthropic.Anthropic, profile: str, postings: list[JobPosting]) -> dict[str, dict]:
     """Returnerer {job_id: {"score": int, "reason": str}} for hver posting."""
+    results: dict[str, dict] = {}
+    for i in range(0, len(postings), BATCH_SIZE):
+        batch = postings[i : i + BATCH_SIZE]
+        try:
+            results.update(_score_batch(client, profile, batch))
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"Kunne ikke scor batch {i}-{i + len(batch)}: {e}")
+    return results
+
+
+def _score_batch(client: anthropic.Anthropic, profile: str, postings: list[JobPosting]) -> dict[str, dict]:
     if not postings:
         return {}
 
@@ -39,7 +53,7 @@ Returner et JSON-array med ét objekt per job: [{{"id": "...", "score": 0-100, "
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=4096,
+        max_tokens=8192,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
     )
