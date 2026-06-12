@@ -43,11 +43,15 @@ def main() -> None:
     conn = init_db()
 
     all_postings = []
+    seen_ids = set()
     for adapter in ADAPTERS:
-        all_postings.extend(adapter.fetch())
+        for posting in adapter.fetch():
+            if posting.id not in seen_ids:
+                seen_ids.add(posting.id)
+                all_postings.append(posting)
 
     new_postings = filter_new(conn, all_postings)
-    print(f"Hentede {len(all_postings)} jobs, {len(new_postings)} er nye.")
+    print(f"Hentede {len(all_postings)} unikke jobs, {len(new_postings)} er nye.")
 
     if not new_postings:
         send_digest([], os.environ["DIGEST_TO_EMAIL"])
